@@ -14,7 +14,7 @@ use std::{
 #[derive(Deserialize)]
 pub struct CompletionRequest {
     prompt_tokens: String,
-    completion_max_len: usize,
+    completion_max_len: String,
 }
 
 struct InferenceActor {
@@ -53,7 +53,7 @@ impl Handler<InferenceRequest> for InferenceActor {
                 prompt: llm::Prompt::Text(&prompt_tokens),
                 parameters: &llm::InferenceParameters::default(),
                 play_back_previous_tokens: false,
-                maximum_token_count: Some(completion_max_len),
+                maximum_token_count: Some(completion_max_len.parse::<usize>().unwrap_or(500)),
             },
             &mut Default::default(),
             |r| match r {
