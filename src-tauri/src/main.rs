@@ -31,11 +31,12 @@ fn main() -> Result<(), anyhow::Error> {
     let session = Arc::new(Mutex::new(session));
     let model = Arc::new(Mutex::new(model));
 
-    let session_for_thread = Arc::clone(&session);
-    let model_for_thread = Arc::clone(&model);
+    let session_for_server_thread = Arc::clone(&session);
+    let model_for_server_thread = Arc::clone(&model);
 
     let server_handle = thread::spawn(move || {
-        server::run_server(session_for_thread, model_for_thread).expect("Failed to start server");
+        server::run_server(session_for_server_thread, model_for_server_thread)
+            .expect("Failed to start server");
     });
 
     tauri::Builder::default()
